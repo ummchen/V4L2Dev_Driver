@@ -36,12 +36,12 @@ static struct v4l2dev v4l2_dev;
 static const struct v4l2_pix_format v4l2dev_video_format =
 {
 	.pixelformat	= V4L2_PIX_FMT_GREY,
-	.width		= IMG_WIDTH,
-	.height		= IMG_HEIGHT,
-	.field		= V4L2_FIELD_NONE,
-	.colorspace	= V4L2_COLORSPACE_SRGB,
+	.width			= IMG_WIDTH,
+	.height			= IMG_HEIGHT,
+	.field			= V4L2_FIELD_NONE,
+	.colorspace		= V4L2_COLORSPACE_SRGB,
 	.bytesperline	= IMG_WIDTH,
-	.sizeimage	= IMG_WIDTH * IMG_HEIGHT,
+	.sizeimage		= IMG_WIDTH * IMG_HEIGHT,
 };
 
 static int v4l2dev_vidioc_querycap(struct file *file, void *priv, struct v4l2_capability *cap)
@@ -133,18 +133,18 @@ fault:
 }
 
 static const struct vb2_ops v4l2dev_queue_ops = {
-	.queue_setup		= v4l2dev_queue_setup,
+	.queue_setup	= v4l2dev_queue_setup,
 	.buf_queue		= v4l2dev_buffer_queue,
-	.wait_prepare		= vb2_ops_wait_prepare,
-	.wait_finish		= vb2_ops_wait_finish,
+	.wait_prepare	= vb2_ops_wait_prepare,
+	.wait_finish	= vb2_ops_wait_finish,
 };
 
 static const struct vb2_queue v4l2dev_queue = {
-	.type			= V4L2_BUF_TYPE_VIDEO_CAPTURE,
-	.io_modes		= VB2_MMAP | VB2_READ,
+	.type				= V4L2_BUF_TYPE_VIDEO_CAPTURE,
+	.io_modes			= VB2_MMAP | VB2_READ,
 	.buf_struct_size	= sizeof(struct vb2_buffer),
-	.ops			= &v4l2dev_queue_ops,
-	.mem_ops		= &vb2_vmalloc_memops,
+	.ops				= &v4l2dev_queue_ops,
+	.mem_ops			= &vb2_vmalloc_memops,
 	.timestamp_flags	= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC,
 	.min_buffers_needed	= 1,
 };
@@ -153,29 +153,29 @@ static const struct v4l2_file_operations v4l2dev_video_fops = {
 	.owner			= THIS_MODULE,
 	.open			= v4l2_fh_open,
 	.release		= vb2_fop_release,
-	.unlocked_ioctl		= video_ioctl2,
+	.unlocked_ioctl	= video_ioctl2,
 	.read			= vb2_fop_read,
 	.mmap			= vb2_fop_mmap,
 	.poll			= vb2_fop_poll,
 };
 
 static const struct v4l2_ioctl_ops v4l2dev_video_ioctl_ops = {
-	.vidioc_querycap		= v4l2dev_vidioc_querycap,
+	.vidioc_querycap			= v4l2dev_vidioc_querycap,
 	.vidioc_enum_fmt_vid_cap	= v4l2dev_vidioc_enum_fmt,
 	.vidioc_try_fmt_vid_cap		= v4l2dev_vidioc_fmt,
 	.vidioc_s_fmt_vid_cap		= v4l2dev_vidioc_fmt,
 	.vidioc_g_fmt_vid_cap		= v4l2dev_vidioc_fmt,
- 	.vidioc_enum_input		= v4l2dev_vidioc_enum_input,
-	.vidioc_g_input			= v4l2dev_vidioc_g_input,
-	.vidioc_s_input			= v4l2dev_vidioc_s_input,
-	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
-	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
-	.vidioc_querybuf		= vb2_ioctl_querybuf,
-	.vidioc_qbuf			= vb2_ioctl_qbuf,
-	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
-	.vidioc_expbuf			= vb2_ioctl_expbuf,
-	.vidioc_streamon		= vb2_ioctl_streamon,
-	.vidioc_streamoff		= vb2_ioctl_streamoff,
+ 	.vidioc_enum_input			= v4l2dev_vidioc_enum_input,
+	.vidioc_g_input				= v4l2dev_vidioc_g_input,
+	.vidioc_s_input				= v4l2dev_vidioc_s_input,
+	.vidioc_reqbufs				= vb2_ioctl_reqbufs,
+	.vidioc_create_bufs			= vb2_ioctl_create_bufs,
+	.vidioc_querybuf			= vb2_ioctl_querybuf,
+	.vidioc_qbuf				= vb2_ioctl_qbuf,
+	.vidioc_dqbuf				= vb2_ioctl_dqbuf,
+	.vidioc_expbuf				= vb2_ioctl_expbuf,
+	.vidioc_streamon			= vb2_ioctl_streamon,
+	.vidioc_streamoff			= vb2_ioctl_streamoff,
 };
 
 static const struct video_device v4l2dev_video_device = {
@@ -207,9 +207,9 @@ static int __init v4l2dev_init(void)
 	}
 
 	mutex_init(&v4l2dev_data->lock);
-	v4l2dev_data->queue = v4l2dev_queue;
-	v4l2dev_data->queue.drv_priv = v4l2dev_data;
-	v4l2dev_data->queue.lock = &v4l2dev_data->lock;
+	v4l2dev_data->queue				= v4l2dev_queue;
+	v4l2dev_data->queue.drv_priv	= v4l2dev_data;
+	v4l2dev_data->queue.lock		= &v4l2dev_data->lock;
 	ret = vb2_queue_init(&v4l2dev_data->queue);
 	if (ret < 0)
 	{
@@ -219,9 +219,9 @@ static int __init v4l2dev_init(void)
 
 	v4l2dev_data->vdev = v4l2dev_video_device;
 	strlcpy(v4l2dev_data->vdev.name, "V4l2Dev Video Device", sizeof(v4l2dev_data->vdev.name));
-	v4l2dev_data->vdev.v4l2_dev = &v4l2dev_data->v4l2_dev;
-	v4l2dev_data->vdev.lock = &v4l2dev_data->lock;
-	v4l2dev_data->vdev.queue = &v4l2dev_data->queue;
+	v4l2dev_data->vdev.v4l2_dev	= &v4l2dev_data->v4l2_dev;
+	v4l2dev_data->vdev.lock		= &v4l2dev_data->lock;
+	v4l2dev_data->vdev.queue	= &v4l2dev_data->queue;
 	video_set_drvdata(&v4l2dev_data->vdev, v4l2dev_data);
 
 	ret = video_register_device(&v4l2dev_data->vdev, VFL_TYPE_GRABBER, -1);
