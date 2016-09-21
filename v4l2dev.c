@@ -94,7 +94,9 @@ static int v4l2dev_vidioc_g_input(struct file *file, void *priv, unsigned int *i
 	return 0;
 }
 
-static int v4l2dev_queue_setup(struct vb2_queue *q, const void *parg, unsigned int *nbuffers, unsigned int *nplanes, unsigned int sizes[], void *alloc_ctxs[])
+static int v4l2dev_queue_setup(struct vb2_queue *q, const struct v4l2_format *fmt, unsigned int *nbuffers, unsigned int *nplanes, unsigned int sizes[], void *alloc_ctxs[])	//for < 4.4
+//static int v4l2dev_queue_setup(struct vb2_queue *q, const void *parg, unsigned int *nbuffers, unsigned int *nplanes, unsigned int sizes[], void *alloc_ctxs[])	//for = 4.4
+//static int v4l2dev_queue_setup(struct vb2_queue *q, unsigned int *nbuffers, unsigned int *nplanes, unsigned int sizes[], void *alloc_ctxs[])	//for > 4.4
 {
 	size_t size = IMG_WIDTH * IMG_HEIGHT;
 	if (*nplanes)
@@ -145,7 +147,7 @@ static const struct vb2_queue v4l2dev_queue = {
 	.buf_struct_size	= sizeof(struct vb2_buffer),
 	.ops				= &v4l2dev_queue_ops,
 	.mem_ops			= &vb2_vmalloc_memops,
-	.timestamp_flags	= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC,
+	//.timestamp_flags	= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC,	//for > 3.14 only
 	.min_buffers_needed	= 1,
 };
 
