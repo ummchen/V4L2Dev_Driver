@@ -147,7 +147,8 @@ static const struct vb2_queue v4l2dev_queue = {
 	.buf_struct_size	= sizeof(struct vb2_buffer),
 	.ops				= &v4l2dev_queue_ops,
 	.mem_ops			= &vb2_vmalloc_memops,
-	//.timestamp_flags	= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC,	//for > 3.14 only
+	.timestamp_type		= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC,	//for <= 3.14
+	//.timestamp_flags	= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC,	//for > 3.14
 	.min_buffers_needed	= 1,
 };
 
